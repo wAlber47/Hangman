@@ -2,7 +2,7 @@
 HANGMAN - CSI160 Final Project
 William Alber 11/11/2019
 """
-import random, sys
+import random, sys, os, time
 
 print("Hello! Welcome to Hangman!")
 print("Please refer to the menu and select an option.")
@@ -30,27 +30,48 @@ hard_words = ["awkward", "axion", "buzzwords", "buckaroo", "croquet",
               "stronghold", "transcript", "transgress", "voodoo",
               "waltz", "witchcraft", "yummy", "zigzag", "zodiac"]
 
-def play(words):
-    # Choosing random word from list
-    word = words[random.randint(0, len(words))]
+    
+def play(word):
     for char in word:
         print("_", end=" ")
-
-    print(word)
     
     guessed = []
-    for i in range(0, 6):  # Hangman has six guesses
-        g = input("\nGuess a letter: ")
-        if len(g) == 1:  # Testing that input is char
+    tries = 6
+    while tries != 0:
+        g = input("\n\nGuess a letter or input the word: ")
+
+        # Check if guess was correct and prints remaining tries
+        if g not in word:
+            tries -= 1
+        print("\nGuesses Remaining:", tries, end="\n\n")
+
+        # Check for if guess is in word
+        if len(g) == 1:  
             guessed.append(g)
             for char in word:
-                print()  # Formatting
                 if char in guessed:
                     print(char, end=" ")
                 else:
                     print("_", end=" ")
-            print("\n\nGuessed Letters:", guessed)
-            print()  # Formatting
+                    
+        # Checks for word input to be correct
+        elif len(g) > 1:
+            if g.lower() == word:
+                print("Correct! The word was", word, end=".\n")
+                return
+            else:
+                print("Nope, that's not it. Keep guessing!")
+
+        # Displaying incorrect guesses
+        print("\n\nGuessed Letters: ", end="")
+        for char in guessed:
+            if char not in word:
+                print(char, end=" - ")
+                
+            
+    print("\n\nYou ran out of guesses. The word was", word + ".")
+    print("Good try!\n")
+    
     
 def change_difficulty(difficulty):
     if difficulty == True:
@@ -85,9 +106,12 @@ while True:
     if user.lower() == "s":
         print("\nSolo Game:\n")
         if difficulty == True:
-            play(easy_words)
+            # Choosing random word from list
+            word = random.choice(easy_words)
+            play(word)
         else:
-            play(hard_words)
+            word = random.choice(hard_words)
+            play(word)
 
     # Change Difficulty
     if user.lower() == "d":
@@ -97,6 +121,10 @@ while True:
     # Versus Mode
     if user.lower() == "v":
         print("\nVersus Mode:\n")
+
+        word = print("Player #1 Enter your Word: ")
+        print("Good Luck Guessing, Player #2\n")
+        play(word)
 
     # Quit
     if user.lower() == "q":
