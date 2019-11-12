@@ -122,7 +122,7 @@ while True:
     if user.lower() == "v":
         print("\nVersus Mode:\n")
 
-        word = print("Player #1 Enter your Word: ")
+        word = input("Player #1 Enter your Word: ")
         print("Good Luck Guessing, Player #2\n")
         play(word)
 
